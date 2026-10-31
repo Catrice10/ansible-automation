@@ -1,16 +1,20 @@
 servers:
   hosts:
     pi1:
+    srv1:
     vps2:
+    b72:
 
 backup_destinations:
   hosts:
     pi1:
+#    srv1:
 
 backup_sources:
   hosts:
-#    pi1:
+    pi1:
     vps2:
+    b72:
 
 webservers:
   hosts:
@@ -20,3 +24,14 @@ vouchers:
   hosts:
     vps2:
 
+grafana:
+  hosts:
+    srv1:
+
+mattermost:
+  hosts:
+    b72:
+
+dataproxies:
+  hosts:
+    pi1:

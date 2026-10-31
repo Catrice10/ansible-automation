@@ -1,0 +1,10 @@
+source_directories:
+    - /srv/mattermost
+
+# Dumps run from borgmatic.service, which can't change user, as the read-only
+# PostgreSQL role root. Restores need more rights and run from a root shell, as
+# postgres. Both go through peer authentication.
+postgresql_databases:
+    - name: mattermost
+      pg_restore_command: runuser -u postgres -- pg_restore
+      psql_command: runuser -u postgres -- psql

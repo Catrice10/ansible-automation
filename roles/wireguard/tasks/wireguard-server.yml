@@ -5,6 +5,7 @@
   - name: Install wireguard
     ansible.builtin.apt:
       pkg:
+        - iproute2  # For wg-quick, missing from minimal containers
         - wireguard
       update_cache: true
       state: present
