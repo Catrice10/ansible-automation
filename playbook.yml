@@ -80,6 +80,14 @@
     - backup
     - source
 
+- name: Setup Google Drive proxies
+  hosts: dataproxies
+  roles:
+    - role: systemd_handlers
+    - role: gdrivesync
+      tags: ["gdrivesync"]
+  tags: ["dataproxies"]
+
 - name: Setup grafana, loki and prometheus, served through the webservers' caddy
   hosts: grafana
   roles:
@@ -139,13 +147,6 @@
 #   roles:
 #     - systemd
 #     - borgbackup
-#
-# - name: Setup dataproxies
-#   hosts: dataproxies
-#   become: true
-#   roles:
-#     - systemd
-#     - gdrivesync
 #
 # - name: Setup influxdb
 #   hosts: webservers

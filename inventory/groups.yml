@@ -12,6 +12,7 @@ backup_destinations:
 
 backup_sources:
   hosts:
+    pi1:
     vps2:
     b72:
 
@@ -30,3 +31,7 @@ grafana:
 mattermost:
   hosts:
     b72:
+
+dataproxies:
+  hosts:
+    pi1:
