@@ -14,11 +14,16 @@
       ansible.builtin.apt:
         update_cache: true
         pkg:
+          - ghostscript  # For PDF thumbnails through imagick
           - mariadb-server
+          - "php{{ wordpress_php_version }}-apcu"
+          - "php{{ wordpress_php_version }}-bcmath"
           - "php{{ wordpress_php_version }}-cli"
           - "php{{ wordpress_php_version }}-curl"
           - "php{{ wordpress_php_version }}-fpm"
           - "php{{ wordpress_php_version }}-gd"
+          - "php{{ wordpress_php_version }}-igbinary"
+          - "php{{ wordpress_php_version }}-imagick"
           - "php{{ wordpress_php_version }}-intl"
           - "php{{ wordpress_php_version }}-mbstring"
           - "php{{ wordpress_php_version }}-mysql"
@@ -27,6 +32,7 @@
           - "php{{ wordpress_php_version }}-xmlrpc"
           - "php{{ wordpress_php_version }}-zip"
           - python3-pymysql  # For the community.mysql.* modules
+          - tzdata-legacy  # Deprecated time zone names are fatal to WordPress without it
 
     # Wordpress CLI
 
