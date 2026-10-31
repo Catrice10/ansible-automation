@@ -139,12 +139,12 @@
         - _task.result.rc != 0
         - '"No plugin auto-updates enabled." not in _task.result.stderr'
 
-    - name: Deactivate plugins
+    - name: Delete plugins
       ansible.builtin.command:
         chdir: "{{ wordpress_root_dir }}"
-        cmd: "{{ wordpress_wp_cli }} plugin deactivate {{ wordpress_plugins_deactivated | join(' ') }}"
+        cmd: "{{ wordpress_wp_cli }} plugin delete {{ wordpress_plugins_deleted | join(' ') }}"
       changed_when:
-        - '"Deactivated" in _task.result.stdout'
+        - '"Deleted" in _task.result.stdout'
 
     # WP_HOME and WP_SITEURL override the URL stored in the database at install
     # time, which WordPress uses for every redirect (e.g. wp-login.php)
