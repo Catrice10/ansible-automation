@@ -12,7 +12,7 @@ Use `uv` to run everything (Ansible, ansible-lint, molecule) — dependencies ar
 
 ```sh
 # Local dev/testing with libvirt VMs (safe — never touches production)
-uv run molecule create        # create the VMs (pi1, srv1, vps2, b72) defined in molecule/default/molecule.yml
+uv run molecule create        # create the VMs (pi1, srv1, vps2, b74) defined in molecule/default/molecule.yml
 uv run molecule prepare       # prepare VMs for the playbook
 uv run molecule converge      # run playbook.yml against the VMs
 uv run molecule verify        # check that wordpress, vouchers, membres, grafana and mattermost work
@@ -42,7 +42,7 @@ ansible-vault decrypt secret.yml
 
 There is no unit test suite; **Molecule is the test harness**. It boots libvirt VMs from Debian 13 (trixie) cloud images and converges the real playbook against them via `molecule/default/converge.yml`, which sets `deployment_is_dev: true` before importing the root `playbook.yml`. `molecule/default/verify.yml` (run by `molecule verify`) checks the web services after a converge; add a `molecule/default/verify/<service>.yml` for each new web app.
 
-Molecule inventory is linked directly to `inventory/groups.yml` (see `molecule/default/molecule.yml`), so VM hostnames (`pi1`, `srv1`, `vps2`, `b72`) must match group membership there. Molecule uses its own vault_password_file pointing at the same `vault_password.sh`, so vault-encrypted vars work identically in dev and prod.
+Molecule inventory is linked directly to `inventory/groups.yml` (see `molecule/default/molecule.yml`), so VM hostnames (`pi1`, `srv1`, `vps2`, `b74`) must match group membership there. Molecule uses its own vault_password_file pointing at the same `vault_password.sh`, so vault-encrypted vars work identically in dev and prod.
 
 ### Testing web services after converge
 
@@ -71,7 +71,7 @@ A sequence of plays, each scoped to an inventory group, applying roles tagged fo
 6. **dataproxies** — `systemd_handlers`, `gdrivesync` (tag `dataproxies`): Google Drive sync on `pi1`, at 01:00, before the 04:00 backups.
 7. **grafana** — `systemd_handlers`, `grafana` (tag `grafana`): grafana, loki and prometheus on `srv1`, reachable over Wireguard only.
 8. **webservers** — `systemd_handlers`, `caddy_handlers`, `caddy`, `vouchers`, `membres`, `wordpress`, `grafana_proxy` (tag `webservers`).
-9. **mattermost** — `caddy_handlers`, `caddy`, `mattermost` (tag `mattermost`): Bâtiment 7's chat.batiment7.org on `b72`, Team Edition with PostgreSQL. `/usr/local/sbin/mattermost-import` on the host loads another server's data (database dump, `config.json`, attachments), migrating it through the ESR versions in `mattermost_import_steps`.
+9. **mattermost** — `caddy_handlers`, `caddy`, `mattermost` (tag `mattermost`): Bâtiment 7's chat.batiment7.org on `b74`, Team Edition with PostgreSQL. `/usr/local/sbin/mattermost-import` on the host loads another server's data (database dump, `config.json`, attachments), migrating it through the ESR versions in `mattermost_import_steps`.
 10. **servers** — `node_exporter`, `alloy`: monitoring agents.
 
 Roles run in dependency order within each play; e.g. `caddy` must run before the site roles that register Caddy vsites and `notify: caddy changed`.
