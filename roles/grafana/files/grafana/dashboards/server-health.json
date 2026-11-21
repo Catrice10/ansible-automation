@@ -27,7 +27,7 @@
       }
     ],
     "cursorSync": "Off",
-    "editable": true,
+    "editable": false,
     "elements": {
       "panel-1": {
         "kind": "Panel",
@@ -42,7 +42,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "P1809F7CD0C75ACF3"
+                        "name": "prometheus"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -65,7 +65,7 @@
               "transformations": []
             }
           },
-          "description": "",
+          "description": "1 si Prometheus a réussi à collecter node_exporter sur cet hôte, 0 sinon. Un 0 signifie que la machine ne rapporte plus, ce qui n'implique pas forcément qu'elle soit éteinte.",
           "id": 1,
           "links": [],
           "title": "État des serveurs",
@@ -142,14 +142,14 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "P1809F7CD0C75ACF3"
+                        "name": "prometheus"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "((100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) * on(instance) up{job=\"node\"}) or (up{job=\"node\"} == 0)",
+                        "expr": "((100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)) and on(instance) (up{job=\"node\"} == 1)) or ((up{job=\"node\"} == 0) - 1)",
                         "instant": true,
                         "legendFormat": "{{instance}}",
                         "range": false
@@ -164,7 +164,7 @@
               "transformations": []
             }
           },
-          "description": "",
+          "description": "Pourcentage de processeur non oisif, moyenné sur cinq minutes. Un tiret rouge signale un hôte qui ne rapporte plus : la valeur de repli est -1, impossible pour un pourcentage, afin de ne jamais confondre un serveur muet avec un serveur au repos.",
           "id": 2,
           "links": [],
           "title": "CPU utilisé",
@@ -180,13 +180,13 @@
                   "mappings": [
                     {
                       "options": {
-                        "from": -1,
+                        "from": -1.5,
                         "result": {
                           "color": "dark-red",
                           "index": 0,
                           "text": "-"
                         },
-                        "to": 1
+                        "to": -0.5
                       },
                       "type": "range"
                     }
@@ -248,14 +248,14 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "P1809F7CD0C75ACF3"
+                        "name": "prometheus"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "((1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 * on(instance) up{job=\"node\"}) or (up{job=\"node\"} == 0)",
+                        "expr": "(((1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100) and on(instance) (up{job=\"node\"} == 1)) or ((up{job=\"node\"} == 0) - 1)",
                         "instant": true,
                         "legendFormat": "{{instance}}",
                         "range": false
@@ -270,7 +270,7 @@
               "transformations": []
             }
           },
-          "description": "",
+          "description": "Pourcentage de mémoire non disponible, calculé depuis node_memory_MemAvailable_bytes, qui tient compte du cache réclamable par le noyau.",
           "id": 3,
           "links": [],
           "title": "Mémoire utilisée",
@@ -286,13 +286,13 @@
                   "mappings": [
                     {
                       "options": {
-                        "from": -1,
+                        "from": -1.5,
                         "result": {
                           "color": "dark-red",
                           "index": 0,
                           "text": "-"
                         },
-                        "to": 1
+                        "to": -0.5
                       },
                       "type": "range"
                     }
@@ -353,14 +353,14 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "P1809F7CD0C75ACF3"
+                        "name": "prometheus"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
                         "exemplar": false,
-                        "expr": "((1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|devtmpfs|vfat\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|devtmpfs|vfat\"})) * 100 * on(instance) up{job=\"node\"}) or (up{job=\"node\"} == 0)",
+                        "expr": "(((1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|devtmpfs|vfat\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|devtmpfs|vfat\"})) * 100) and on(instance) (up{job=\"node\"} == 1)) or ((up{job=\"node\"} == 0) - 1)",
                         "instant": true,
                         "legendFormat": "{{instance}} {{mountpoint}}",
                         "range": false
@@ -375,7 +375,7 @@
               "transformations": []
             }
           },
-          "description": "",
+          "description": "Une valeur par système de fichiers monté, hors tmpfs, devtmpfs et vfat. Les volumes ne sont pas agrégés : un petit disque presque plein reste visible à côté d'un grand disque vide.",
           "id": 4,
           "links": [],
           "title": "Disque utilisé",
@@ -391,13 +391,13 @@
                   "mappings": [
                     {
                       "options": {
-                        "from": -1,
+                        "from": -1.5,
                         "result": {
                           "color": "dark-red",
                           "index": 0,
                           "text": "-"
                         },
-                        "to": 1
+                        "to": -0.5
                       },
                       "type": "range"
                     }
@@ -458,7 +458,7 @@
                     "hidden": false,
                     "query": {
                       "datasource": {
-                        "name": "P1809F7CD0C75ACF3"
+                        "name": "prometheus"
                       },
                       "group": "prometheus",
                       "kind": "DataQuery",
@@ -480,7 +480,7 @@
               "transformations": []
             }
           },
-          "description": "",
+          "description": "Secondes écoulées depuis le dernier échantillon enregistré par Prometheus pour cet hôte. Au-delà de l'intervalle de collecte, la machine a cessé de rapporter.",
           "id": 5,
           "links": [],
           "title": "Dernière donnée reçue",
